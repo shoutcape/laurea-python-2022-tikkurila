@@ -1,6 +1,6 @@
 # tee ratkaisu tänne
 def summa():
-    with open("matriisi.txt", "r") as tiedosto:
+    with open("matriisi.txt",) as tiedosto:
         # Lue tiedoston rivit ja tallenna ne matriisi-listaan
         matriisi = []
         for rivi in tiedosto:
@@ -12,7 +12,7 @@ def summa():
         return sum(matriisi)
 
 def maksimi():
-    with open("matriisi.txt", "r") as tiedosto:
+    with open("matriisi.txt",) as tiedosto:
         # Lue tiedoston rivit ja tallenna ne matriisi-listaan
         matriisi = []
         for rivi in tiedosto:
@@ -24,7 +24,7 @@ def maksimi():
         return max(matriisi)
 
 def rivisummat():
-    with open("matriisi.txt", "r") as tiedosto:
+    with open("matriisi.txt") as tiedosto:
         # Lue tiedoston rivit ja tallenna ne matriisi-listaan
         matriisi = []
         for rivi in tiedosto:
