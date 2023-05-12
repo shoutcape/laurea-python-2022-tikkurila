@@ -1,0 +1,3 @@
+Ohjelmoinninperusteet, 5 opintopistetta
+=======================================
+nimi                          teht_lkm  teht_pist koe_pist  yht_pist  arvosana
