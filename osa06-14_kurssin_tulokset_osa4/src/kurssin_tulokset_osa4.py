@@ -3,25 +3,19 @@ tehtavatiedot = "tehtavat1.csv"
 koepisteet = "koepisteet1.csv"
 kurssin_tiedot = "kurssi1.txt"
 """
-opiskelijatiedot = input("opiskelijat1.csv")
-tehtavatiedot = input("tehtavat1.csv")
-koepisteet = input("koepisteet1.csv")
-kurssin_tiedot = input("kurssi1.txt")
+opiskelijatiedot = input("opiskelijatiedot: ")
+tehtavatiedot = input("tehtävätiedot: ")
+koepisteet = input("koepisteet: ")
+kurssin_tiedot = input("kurssin tiedot: ")
+print("Tulokset talletettu tiedostoihin tulos.txt ja tulos.csv")
 """
 
 def arvosana(pisteet):
-    if pisteet < 20:
-        return 0
-    elif pisteet < 25:
-        return 1
-    elif pisteet < 30:
-        return 2
-    elif pisteet < 35:
-        return 3
-    elif pisteet < 40:
-        return 4
-    else:
-        return 5
+    a = 0
+    rajat = [15, 18, 21, 24, 28]
+    while a < 5 and pisteet >= rajat[a]:
+        a += 1
+    return a
 
 
 def tallenna_tulokset(tiedostonimi, viikkopisteet):
@@ -39,11 +33,9 @@ def hae_arvosana(haettava, viikkopisteet):
 
 with open(opiskelijatiedot) as opiskelijat, open(tehtavatiedot) as tehtavat, open(koepisteet) as koe_pst, open(
         kurssin_tiedot) as kurssit:
-
-
     kurssi = {}
     for rivi in kurssit:
-        osat = rivi.strip().replace(" ","").split(":")
+        osat = rivi.strip().split(": ")
         kurssi[osat[0]] = osat[1]
 
     opiskelijalista = {}
@@ -59,7 +51,10 @@ with open(opiskelijatiedot) as opiskelijat, open(tehtavatiedot) as tehtavat, ope
         osat = rivi.strip().split(";")
         if osat[0] == "opnro":
             continue
-        tehtavalista[osat[0]] = osat[1:]
+        summa = 0
+        for i in range(1, 8):
+            summa += int(osat[i])
+        tehtavalista[osat[0]] = summa
     # lista tehtävistä jotka tehty
 
     koepisteet = {}
@@ -73,38 +68,22 @@ with open(opiskelijatiedot) as opiskelijat, open(tehtavatiedot) as tehtavat, ope
         koepisteet[osat[0]] = yhteensa
     # yhteensälasketut koepisteet
 
-
 # Luodaan tulos.txt tiedosto, johon tulostuu esteettinen lista eri tiedoista
 with open("tulos.txt", "w") as tulostallennus:
     i = []
     for tieto, arvo in kurssi.items():
         i.append(arvo)
-    i = [f"{i[0]}, {i[1]} opintopistetta\n"]
+    i = [f"{i[0]}, {i[1]} opintopistettä\n"]
     tulostallennus.write(i[0])
-    tulostallennus.write("="*(len(i[0])-1)+"\n")
-    tulostallennus.write(f"nimi                          teht_lkm  teht_pist koe_pist  yht_pist  arvosana")
-    for nro, nimi in opiskelijalista.items():
+    tulostallennus.write("=" * (len(i[0]) - 1) + "\n")
+    tulostallennus.write(f"nimi                          teht_lkm  teht_pist koe_pist  yht_pist  arvosana\n")
+    for opiskelijanro, nimi in opiskelijalista.items():
+        pisteet = tehtavalista[opiskelijanro] // 4 + koepisteet[opiskelijanro]
+        kurssiarvosana = (arvosana(pisteet))
+        tulostallennus.write(f"{nimi:30}{tehtavalista[opiskelijanro]:<10}{tehtavalista[opiskelijanro]//4:<10}{koepisteet[opiskelijanro]:<10}{pisteet:<10}{kurssiarvosana}\n")
 
-
-
-
-
-
-# for nro, nimi in opiskelijat.items():
-#     arvosana = tehtavat[nro]//4 + koepisteet[nro]
-#     yth_pist = arvosana
-#     if arvosana <= 14:
-#         arvosana = 0
-#     elif arvosana in range(15,18):
-#         arvosana = 1
-#     elif arvosana in range(18, 21):
-#         arvosana = 2
-#     elif arvosana in range(21, 24):
-#         arvosana = 3
-#     elif arvosana in range(24,28):
-#         arvosana = 4
-#     elif arvosana >= 28:
-#         arvosana = 5
-#
-#
-#     print(f"{nimi:30}{tehtavat[nro]:<10}{tehtavat[nro]//4:<10}{koepisteet[nro]:<10}{yth_pist:<10}{arvosana}")
+with open("tulos.csv", "w") as tulostilasto:
+    for opiskelijanro, nimi in opiskelijalista.items():
+        pisteet = tehtavalista[opiskelijanro] // 4 + koepisteet[opiskelijanro]
+        kurssiarvosana = (arvosana(pisteet))
+        tulostilasto.write(f"{opiskelijanro};{nimi};{kurssiarvosana}\n")
